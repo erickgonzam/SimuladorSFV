@@ -41,7 +41,7 @@ def calcular_potencia(row):
         return None
 
 df_editado["Potencia (W)"] = df_editado.apply(calcular_potencia, axis=1)
-df_editado["Energía diaria (Wh)"] = df_editado["Potencia (W)"] * df_editado["Horas uso (h/día)"]
+df_editado["Energía diaria (Wh)"] = pd.to_numeric(df_editado["Potencia (W)"], errors="coerce") * pd.to_numeric(df_editado["Horas uso (h/día)"], errors="coerce")
 energia_total = df_editado["Energía diaria (Wh)"].sum()
 st.success(f"Demanda energética total: {energia_total:.2f} Wh/día")
 
