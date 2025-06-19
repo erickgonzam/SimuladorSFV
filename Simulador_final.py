@@ -30,11 +30,17 @@ df = pd.DataFrame(data)
 # Editor interactivo
 df_editado = st.data_editor(df, num_rows="dynamic", use_container_width=True)
 
-# Cálculo automático de potencia y energía diaria
-df_editado["Potencia (W)"] = df_editado.apply(
-    lambda row: row["Voltaje (V)"] * row["Corriente (A)"] if pd.isna(row["Potencia (W)"]) else row["Potencia (W)"],
-    axis=1
-)
+# Cálculo inteligente de potencia
+
+def calcular_potencia(row):
+    if pd.notna(row["Potencia (W)"]):
+        return row["Potencia (W)"]
+    elif pd.notna(row["Voltaje (V)"]) and pd.notna(row["Corriente (A)"]):
+        return row["Voltaje (V)"] * row["Corriente (A)"]
+    else:
+        return None
+
+df_editado["Potencia (W)"] = df_editado.apply(calcular_potencia, axis=1)
 df_editado["Energía diaria (Wh)"] = df_editado["Potencia (W)"] * df_editado["Horas uso (h/día)"]
 energia_total = df_editado["Energía diaria (Wh)"].sum()
 st.success(f"Demanda energética total: {energia_total:.2f} Wh/día")
