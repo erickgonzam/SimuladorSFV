@@ -102,7 +102,7 @@ st.info(f"🔌 Controlador sugerido: {corriente_controlador} A mínimo, tipo MPP
 
 # --- Inversor ---
 st.header("6. Inversor Recomendado")
-potencia_pico = df_editado["Potencia (W)"].max() * 1.2
+potencia_pico = pd.to_numeric(df_editado["Potencia (W)"], errors="coerce").max() * 1.2
 st.info(f"🔄 Inversor sugerido: mínimo {math.ceil(potencia_fv)} W continuo, con picos de {math.ceil(potencia_pico)} W")
 
 # --- Resultados ---
